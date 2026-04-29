@@ -1,0 +1,26 @@
+.pin-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.pin-overlay--placing {
+  cursor: crosshair;
+}
+
+.pin-overlay__pin {
+  position: absolute;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.pin-overlay__pin:hover {
+  filter: brightness(1.15) drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+  z-index: 20;
+}
+
+.pin-overlay__pin-hitarea {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

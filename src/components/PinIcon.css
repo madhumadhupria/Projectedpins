@@ -1,0 +1,11 @@
+.pin-icon {
+  display: inline-block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pin-icon__body,
+.pin-icon__checkmark,
+.pin-icon__shadow {
+  display: block;
+}

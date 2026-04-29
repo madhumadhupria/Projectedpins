@@ -20,7 +20,7 @@ export const PIN_CONFIGS: PinConfig[] = [
     label: 'Projected pin 1',
     bodyAsset: '/pins/pin-p1.svg',
     svgW: 52,
-    svgH: 68,
+    svgH: 80,          // viewBox expanded from 68→80 to fit dot drop-shadow
     tipY: 52,          // center of the floating dot below the teardrop
   },
   {

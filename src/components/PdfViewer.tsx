@@ -35,18 +35,22 @@ export function PdfViewer({ file, zoom, onSizeChange }: PdfViewerProps) {
     const page = await pdf.getPage(pageNum)
     const ctx = canvas.getContext('2d')!
     const dpr = window.devicePixelRatio || 1
-    // Fit to container width at zoom=1, then multiply by zoom
-    const containerW = container.clientWidth || 900
     const unscaled = page.getViewport({ scale: 1 })
-    const fitScale = containerW / unscaled.width
-    const renderScale = fitScale * zoomLevel * dpr
 
+    // Fit the whole page into the visible scroll-area at zoom=1
+    const PAD = 64 // 32px padding × 2 sides
+    const scrollEl = container.closest('.app__scroll-area') as HTMLElement | null
+    const availW = (scrollEl?.clientWidth  ?? window.innerWidth)  - PAD
+    const availH = (scrollEl?.clientHeight ?? window.innerHeight - 44) - PAD
+    const fitScale = Math.min(availW / unscaled.width, availH / unscaled.height)
+
+    const renderScale = fitScale * zoomLevel * dpr
     const viewport = page.getViewport({ scale: renderScale })
-    canvas.width = viewport.width
+    canvas.width  = viewport.width
     canvas.height = viewport.height
-    // CSS size (logical pixels) = viewport / dpr * zoom
-    const cssW = containerW * zoomLevel
-    const cssH = (unscaled.height / unscaled.width) * cssW
+
+    const cssW = unscaled.width  * fitScale * zoomLevel
+    const cssH = unscaled.height * fitScale * zoomLevel
     canvas.style.width = `${cssW}px`
     canvas.style.height = `${cssH}px`
 

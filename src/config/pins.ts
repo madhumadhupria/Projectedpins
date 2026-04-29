@@ -1,56 +1,67 @@
 import { PinConfig } from '../types'
 
+// Checkmark icon is centered at SVG coords (26, 22) for ALL pin types.
+// At scale S: left = (26 - 11.5/2) * S = 20.25*S,  top = (22 - 9.5/2) * S = 17.25*S
 export const CHECKMARK_ASSET = '/pins/checkmark.svg'
+export const BADGE_CX = 26    // badge circle center X in SVG units (constant)
+export const BADGE_CY = 22    // badge circle center Y in SVG units (constant)
 
 export const PIN_CONFIGS: PinConfig[] = [
   {
     type: 'default',
     label: 'Default pin',
     bodyAsset: '/pins/pin-default.svg',
-    width: 36,
-    height: 41,
+    svgW: 52,
+    svgH: 57.125,
+    tipY: 45.5,        // bottom tip of teardrop path
   },
   {
     type: 'projected-1',
     label: 'Projected pin 1',
     bodyAsset: '/pins/pin-p1.svg',
-    width: 36,
-    height: 60,
+    svgW: 52,
+    svgH: 68,
+    tipY: 52,          // center of the floating dot below the teardrop
   },
   {
     type: 'projected-2',
     label: 'Projected pin 2',
     bodyAsset: '/pins/pin-p2.svg',
-    width: 36,
-    height: 48,
+    svgW: 52,
+    svgH: 64.125,
+    tipY: 52.5,        // bottom of the V-chevron shape
   },
   {
     type: 'projected-3',
     label: 'Projected pin 3',
     bodyAsset: '/pins/pin-default.svg',
     shadowAsset: '/pins/pin-ellipse.svg',
-    width: 36,
-    height: 41,
+    svgW: 52,
+    svgH: 57.125,
+    tipY: 45.5,
   },
   {
     type: 'projected-4',
     label: 'Projected pin 4',
     bodyAsset: '/pins/pin-p4.svg',
-    width: 36,
-    height: 41,
+    svgW: 52,
+    svgH: 57.125,
+    tipY: 45.5,
   },
   {
     type: 'projected-5',
     label: 'Projected pin 5',
     bodyAsset: '/pins/pin-p5.svg',
-    width: 36,
-    height: 41,
+    svgW: 52,
+    svgH: 57.125,
+    tipY: 45.5,
   },
   {
     type: 'projected-6',
     label: 'Projected pin 6',
     bodyAsset: '/pins/pin-p6.svg',
-    width: 36,
-    height: 41,
+    svgW: 52,
+    svgH: 57.125,
+    tipY: 45.5,
   },
 ]

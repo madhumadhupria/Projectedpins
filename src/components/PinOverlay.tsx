@@ -33,9 +33,10 @@ export function PinOverlay({ pins, selectedType, pinScale, onPlace, onRemove }: 
     >
       {pins.map(pin => {
         const cfg = PIN_CONFIGS.find(c => c.type === pin.type)!
-        const shadowExtra = cfg.shadowAsset ? (6 + 2) * pinScale : 0
-        const totalH = cfg.height * pinScale + shadowExtra
-
+        // Anchor: translate so the pin tip (cfg.tipY in SVG coords) lands at (pin.x%, pin.y%).
+        // Horizontal: -50% of svg width = -(svgW/2 * scale) = -(26 * scale) = center of pin.
+        // Since all svgW=52, -50% works perfectly.
+        const tipPx = cfg.tipY * pinScale
         return (
           <div
             key={pin.id}
@@ -43,14 +44,12 @@ export function PinOverlay({ pins, selectedType, pinScale, onPlace, onRemove }: 
             style={{
               left: `${pin.x}%`,
               top: `${pin.y}%`,
-              transform: `translate(-50%, -${cfg.height * pinScale}px)`,
+              transform: `translate(-50%, -${tipPx}px)`,
             }}
             onClick={e => { e.stopPropagation(); onRemove(pin.id) }}
             title="Click to remove"
           >
             <PinIcon config={cfg} scale={pinScale} />
-            {/* invisible hit area below pin tip so clicks near tip still land */}
-            <div className="pin-overlay__pin-hitarea" style={{ height: totalH }} />
           </div>
         )
       })}

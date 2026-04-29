@@ -19,6 +19,7 @@ export interface PinConfig {
   label: string
   bodyAsset: string
   shadowAsset?: string
-  width: number
-  height: number
+  svgW: number    // viewBox width  (all pins = 52)
+  svgH: number    // viewBox height (varies by pin)
+  tipY: number    // Y of pin anchor in SVG coords (the "point" that touches the document)
 }

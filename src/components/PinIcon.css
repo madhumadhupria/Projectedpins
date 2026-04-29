@@ -1,11 +1,26 @@
 .pin-icon {
+  position: relative;
   display: inline-block;
-  pointer-events: none;
   user-select: none;
+  flex-shrink: 0;
 }
 
-.pin-icon__body,
-.pin-icon__checkmark,
-.pin-icon__shadow {
+.pin-icon__body {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
+  /* width & height set via HTML attrs — DO NOT override here; preserves viewBox ratio */
+}
+
+.pin-icon__checkmark {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.pin-icon__shadow {
+  position: absolute;
+  display: block;
+  pointer-events: none;
 }

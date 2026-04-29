@@ -35,7 +35,7 @@ export function PinPanel({
 
       <div className="pin-panel__list">
         {PIN_CONFIGS.map(cfg => {
-          const miniScale = 28 / cfg.width
+          const miniScale = 28 / cfg.svgW  // target 28px wide preview
           const isSelected = selectedType === cfg.type
           return (
             <button

@@ -9,22 +9,24 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 interface PdfViewerProps {
   file: File
+  zoom: number
   onSizeChange?: (width: number, height: number) => void
 }
 
-export function PdfViewer({ file, onSizeChange }: PdfViewerProps) {
+export function PdfViewer({ file, zoom, onSizeChange }: PdfViewerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [pageInfo, setPageInfo] = useState({ current: 1, total: 1 })
   const [loading, setLoading] = useState(true)
   const pdfRef = useRef<pdfjsLib.PDFDocumentProxy | null>(null)
   const renderTaskRef = useRef<pdfjsLib.RenderTask | null>(null)
 
-  const renderPage = useCallback(async (pageNum: number) => {
+  const renderPage = useCallback(async (pageNum: number, zoomLevel: number) => {
     const pdf = pdfRef.current
     const canvas = canvasRef.current
-    if (!pdf || !canvas) return
+    const container = containerRef.current
+    if (!pdf || !canvas || !container) return
 
-    // Cancel any in-progress render
     if (renderTaskRef.current) {
       renderTaskRef.current.cancel()
       renderTaskRef.current = null
@@ -32,22 +34,23 @@ export function PdfViewer({ file, onSizeChange }: PdfViewerProps) {
 
     const page = await pdf.getPage(pageNum)
     const ctx = canvas.getContext('2d')!
-    const devicePixelRatio = window.devicePixelRatio || 1
-    const containerWidth = canvas.parentElement?.clientWidth ?? 900
-
+    const dpr = window.devicePixelRatio || 1
+    // Fit to container width at zoom=1, then multiply by zoom
+    const containerW = container.clientWidth || 900
     const unscaled = page.getViewport({ scale: 1 })
-    const scale = (containerWidth / unscaled.width) * devicePixelRatio
-    const viewport = page.getViewport({ scale })
+    const fitScale = containerW / unscaled.width
+    const renderScale = fitScale * zoomLevel * dpr
 
+    const viewport = page.getViewport({ scale: renderScale })
     canvas.width = viewport.width
     canvas.height = viewport.height
-    canvas.style.width = `${viewport.width / devicePixelRatio}px`
-    canvas.style.height = `${viewport.height / devicePixelRatio}px`
+    // CSS size (logical pixels) = viewport / dpr * zoom
+    const cssW = containerW * zoomLevel
+    const cssH = (unscaled.height / unscaled.width) * cssW
+    canvas.style.width = `${cssW}px`
+    canvas.style.height = `${cssH}px`
 
-    onSizeChange?.(
-      viewport.width / devicePixelRatio,
-      viewport.height / devicePixelRatio,
-    )
+    onSizeChange?.(cssW, cssH)
 
     setLoading(true)
     const task = page.render({ canvasContext: ctx, viewport })
@@ -60,28 +63,37 @@ export function PdfViewer({ file, onSizeChange }: PdfViewerProps) {
     setLoading(false)
   }, [onSizeChange])
 
+  // Load PDF when file changes
   useEffect(() => {
     let cancelled = false
-    const loadPdf = async () => {
-      const buffer = await file.arrayBuffer()
-      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise
+    const load = async () => {
+      const buf = await file.arrayBuffer()
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise
       if (cancelled) { pdf.destroy(); return }
       pdfRef.current = pdf
       setPageInfo({ current: 1, total: pdf.numPages })
-      await renderPage(1)
+      await renderPage(1, zoom)
     }
-    loadPdf()
+    load()
     return () => { cancelled = true }
-  }, [file, renderPage])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file])
+
+  // Re-render when zoom changes
+  useEffect(() => {
+    if (!pdfRef.current) return
+    renderPage(pageInfo.current, zoom)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zoom])
 
   const goTo = async (n: number) => {
     const next = Math.max(1, Math.min(n, pageInfo.total))
     setPageInfo(p => ({ ...p, current: next }))
-    await renderPage(next)
+    await renderPage(next, zoom)
   }
 
   return (
-    <div className="pdf-viewer">
+    <div ref={containerRef} className="pdf-viewer">
       {loading && <div className="pdf-viewer__loading">Loading…</div>}
       <canvas ref={canvasRef} className="pdf-viewer__canvas" />
       {pageInfo.total > 1 && (

@@ -2,28 +2,140 @@
   height: 100%;
   width: 100%;
   display: flex;
+  flex-direction: column;
   background: #e8e8e8;
+  overflow: hidden;
 }
 
-/* ── PDF area ─────────────────────────────────── */
+/* ── Toolbar ──────────────────────────────────── */
 
-.app__viewer {
+.app__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  height: 44px;
+  background: #2b2b2b;
+  color: #fff;
+  flex-shrink: 0;
+  z-index: 200;
+}
+
+.app__toolbar-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #FAA21B;
+  margin-right: 8px;
+}
+
+.app__zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #3a3a3a;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.app__zoom-btn {
+  width: 26px;
+  height: 26px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 300;
+  cursor: pointer;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.12s;
+}
+
+.app__zoom-btn:hover:not(:disabled) {
+  background: #555;
+}
+
+.app__zoom-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.app__zoom-level {
+  min-width: 46px;
+  height: 26px;
+  background: none;
+  border: none;
+  color: #eee;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 3px;
+  text-align: center;
+  transition: background 0.12s;
+}
+
+.app__zoom-level:hover {
+  background: #555;
+}
+
+.app__toolbar-upload {
+  margin-left: auto;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid #555;
+  color: #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.app__toolbar-upload:hover {
+  background: #3a3a3a;
+  border-color: #888;
+}
+
+/* ── Body (toolbar below) ─────────────────────── */
+
+.app__body {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Scroll area ──────────────────────────────── */
+
+.app__scroll-area {
+  flex: 1;
+  overflow: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 24px;
+  padding: 32px;
+  transition: background 0.15s;
 }
+
+.app__scroll-area--dragging {
+  background: #d4e8ff;
+  outline: 2px dashed #FAA21B;
+  outline-offset: -12px;
+}
+
+/* ── PDF wrapper (positions overlay on top) ────── */
 
 .app__pdf-wrapper {
   position: relative;
   background: #fff;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
-  border-radius: 2px;
-  width: 100%;
-  max-width: 1100px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.22);
+  flex-shrink: 0;
+  /* width is dictated by the canvas inside */
 }
 
 /* ── Upload prompt ────────────────────────────── */
@@ -39,18 +151,8 @@
   border: 2px dashed #ccc;
   border-radius: 8px;
   background: #fafafa;
-  transition: border-color 0.15s, background 0.15s;
   text-align: center;
   padding: 32px;
-}
-
-.app__upload--active {
-  border-color: #FAA21B;
-  background: #fff8ec;
-}
-
-.app__upload-icon {
-  margin-bottom: 4px;
 }
 
 .app__upload-title {

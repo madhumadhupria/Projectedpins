@@ -83,6 +83,22 @@
   background: #555;
 }
 
+.app__toolbar-reopen {
+  padding: 5px 12px;
+  background: #FAA21B;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.app__toolbar-reopen:hover {
+  background: #e8920a;
+}
+
 .app__toolbar-upload {
   margin-left: auto;
   padding: 5px 14px;

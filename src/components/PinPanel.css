@@ -14,12 +14,20 @@
   overflow-y: auto;
 }
 
+.pin-panel--minimized {
+  overflow: visible;
+}
+
 .pin-panel__header {
-  padding: 14px 16px 10px;
+  padding: 10px 10px 10px 16px;
   border-bottom: 1px solid #f0f0f0;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 6px;
+}
+
+.pin-panel--minimized .pin-panel__header {
+  border-bottom: none;
 }
 
 .pin-panel__title {
@@ -34,6 +42,41 @@
   font-size: 11px;
   color: #FAA21B;
   font-weight: 500;
+  flex: 1;
+}
+
+.pin-panel__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.pin-panel__action-btn {
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  line-height: 1;
+}
+
+.pin-panel__action-btn:hover {
+  background: #f0f0f0;
+  color: #363636;
+}
+
+.pin-panel__action-btn--close:hover {
+  background: #ffe5e5;
+  color: #c0392b;
 }
 
 .pin-panel__list {

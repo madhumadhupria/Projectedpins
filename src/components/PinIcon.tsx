@@ -28,28 +28,7 @@ export function PinIcon({ config, scale = 1 }: PinIconProps) {
 
   return (
     <div className="pin-icon" style={{ width: w, height: h + (config.shadowAsset ? ellH / 2 : 0) }}>
-      {/* Main pin body — rendered at natural SVG aspect ratio */}
-      <img
-        src={config.bodyAsset}
-        className="pin-icon__body"
-        alt={config.label}
-        width={w}
-        height={h}
-        draggable={false}
-      />
-
-      {/* Checkmark, precisely positioned over badge circle */}
-      <img
-        src={CHECKMARK_ASSET}
-        className="pin-icon__checkmark"
-        alt=""
-        width={ckW}
-        height={ckH}
-        style={{ left: ckLeft, top: ckTop }}
-        draggable={false}
-      />
-
-      {/* Shadow ellipse for Projected pin 3 */}
+      {/* Shadow ellipse FIRST → renders behind the pin body */}
       {config.shadowAsset && (
         <img
           src={config.shadowAsset}
@@ -61,6 +40,27 @@ export function PinIcon({ config, scale = 1 }: PinIconProps) {
           draggable={false}
         />
       )}
+
+      {/* Pin body on top of shadow */}
+      <img
+        src={config.bodyAsset}
+        className="pin-icon__body"
+        alt={config.label}
+        width={w}
+        height={h}
+        draggable={false}
+      />
+
+      {/* Checkmark on top of body */}
+      <img
+        src={CHECKMARK_ASSET}
+        className="pin-icon__checkmark"
+        alt=""
+        width={ckW}
+        height={ckH}
+        style={{ left: ckLeft, top: ckTop }}
+        draggable={false}
+      />
     </div>
   )
 }

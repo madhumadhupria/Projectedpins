@@ -14,6 +14,7 @@ export default function App() {
   const [pinScale, setPinScale] = useState(1)
   const [zoom, setZoom] = useState(1)
   const [dragging, setDragging] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(true)
   const { pins, selectedType, setSelectedType, addPin, removePin, clearPins } = usePins()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -68,6 +69,11 @@ export default function App() {
             title="Zoom in"
           >+</button>
         </div>
+        {!panelOpen && (
+          <button className="app__toolbar-reopen" onClick={() => setPanelOpen(true)} title="Open pin panel">
+            Pins ▶
+          </button>
+        )}
         <label className="app__toolbar-upload" title="Open a different PDF">
           Open PDF
           <input
@@ -121,14 +127,17 @@ export default function App() {
           )}
         </div>
 
-        <PinPanel
-          selectedType={selectedType}
-          onSelectType={setSelectedType}
-          scale={pinScale}
-          onScaleChange={setPinScale}
-          pinCount={pins.length}
-          onClear={clearPins}
-        />
+        {panelOpen && (
+          <PinPanel
+            selectedType={selectedType}
+            onSelectType={setSelectedType}
+            scale={pinScale}
+            onScaleChange={setPinScale}
+            pinCount={pins.length}
+            onClear={clearPins}
+            onClose={() => setPanelOpen(false)}
+          />
+        )}
       </div>
     </div>
   )
